@@ -1,0 +1,369 @@
+﻿<phone:PhoneApplicationPage
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+	xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+	xmlns:maps="clr-namespace:Microsoft.Phone.Maps.Controls;assembly=Microsoft.Phone.Maps"
+	xmlns:local="clr-namespace:Hummingbird"
+	x:Class="Hummingbird.MainPage"
+	mc:Ignorable="d"
+	FontFamily="{StaticResource PhoneFontFamilyNormal}"
+	FontSize="{StaticResource PhoneFontSizeNormal}"
+	Foreground="{StaticResource PhoneForegroundBrush}" 
+	SupportedOrientations="PortraitOrLandscape" Orientation="Portrait"
+    shell:SystemTray.IsVisible="True"
+    toolkit:TiltEffect.IsTiltEnabled="True">
+    <!--shell:SystemTray.BackgroundColor="{StaticResource SystemTrayBackgroundColor}"-->
+
+    <!-- Resources -->
+	<phone:PhoneApplicationPage.Resources>
+        <DataTemplate x:Key="ActivityFeedTemplate">
+            <!--public string storyImage { get; set; }
+                public string header { get; set; }
+                public string content { get; set; }
+                public string timeStamp { get; set; }
+            -->
+            <StackPanel Orientation="Horizontal" Margin="0,-25,0,-20" VerticalAlignment="Top">
+                <Image Width="100" Height="200">
+                    <Image.Source>
+                        <BitmapImage UriSource="{Binding storyImage}" CreateOptions="BackgroundCreation" />
+                    </Image.Source>
+                </Image>
+                
+                <StackPanel Orientation="Vertical" Margin="10,25,0,0" VerticalAlignment="Top">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="2*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
+                            <TextBlock Text="{Binding header}" TextAlignment="Left" Margin="0,0,0,0" Width="600" FontSize="26" Foreground="{StaticResource TitleBrush}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="1" Grid.Column="0" Height="Auto" Orientation="Vertical">
+                            <TextBlock x:Name="statusFeedContent" Text="{Binding content}" TextTrimming="WordEllipsis" TextAlignment="Left" Margin="-300,-5,0,0" Height="90" Width="300" TextWrapping="Wrap" LineHeight="0" LineStackingStrategy="BlockLineHeight" FontSize="22"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="2" Grid.Column="0" Margin="25,2,0,0" Orientation="Vertical">
+                            <TextBlock Text="{Binding timeStamp}" TextAlignment="Left" Margin="0,0,0,0" Width="600" FontSize="22"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>        
+        <DataTemplate x:Key="libraryTemplate">
+			<StackPanel Orientation="Horizontal" Margin="0,-25,0,-20" VerticalAlignment="Top">
+				<toolkit:ContextMenuService.ContextMenu>
+					<toolkit:ContextMenu>
+						<toolkit:MenuItem Header="add to favorites" Click="AddToFavourites_Click"/>
+						<toolkit:MenuItem Header="pin to start" Click="PinToStart_Click"/>
+						<!-- Click=""-->
+					</toolkit:ContextMenu>
+				</toolkit:ContextMenuService.ContextMenu>
+
+				<Image Width="100" Height="200">
+					<Image.Source>
+						<BitmapImage UriSource="{Binding anime.cover_image}" CreateOptions="BackgroundCreation" />
+					</Image.Source>
+				</Image>
+
+				<StackPanel Orientation="Vertical" Margin="10,25,0,0" VerticalAlignment="Top">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="*" />
+							<RowDefinition Height="*" />
+							<RowDefinition Height="*" />
+							<RowDefinition Height="*" />
+							<RowDefinition Height="*" />
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+
+						<TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding anime.title}" Margin="0,0,0,0" Width="600" FontSize="26" Foreground="{StaticResource TitleBrush}"/> <!-- Width 300 -->
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding anime.alternate_title}" Margin="0,-5,0,0" Width="600" FontSize="26"/> <!-- Width 300 -->
+
+						<StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" Margin="0,7,0,0">
+                            <TextBlock Margin="0,20,0,0" Width="auto" FontSize="24">
+													<Run Text="watched: " />
+													<Run Text="{Binding episodes_watched}" />
+													<Run Text="/" />
+													<Run Text="{Binding anime.episode_count}" />
+							</TextBlock>
+						</StackPanel>
+                        <TextBlock Grid.Row="3" Grid.Column="0"  Margin="0,-2,0,0" Width="auto" FontSize="24">
+													<Run Text="rewatched: " />
+													<Run Text="{Binding rewatched_times}" />
+						</TextBlock>
+						
+						<!--                                                 -130,2,0,0  -->
+                        <toolkit:Rating Grid.Row="3" Grid.Column="1" Margin="-720,2,0,0" Width="133.75" Height="26.75" RatingItemCount="5" Value="{Binding rating.valueAsDouble}" ShowSelectionHelper="False" ReadOnly="True" Background="{StaticResource TransparentBrush}" FilledItemStyle="{StaticResource AnitroColouredStars}" />
+
+					</Grid>
+				</StackPanel>
+			</StackPanel>
+		</DataTemplate>        
+		<DataTemplate x:Key="favouritesTemplate">
+			<StackPanel Orientation="Horizontal" Margin="0,-25,0,-20" VerticalAlignment="Top">
+				<toolkit:ContextMenuService.ContextMenu>
+					<toolkit:ContextMenu>
+						<toolkit:MenuItem Header="remove from favorites" Click="RemoveFromFavourites_Click"/>
+						<toolkit:MenuItem Header="pin to start" Click="PinToStart_Click"/>
+						<!-- Click=""-->
+					</toolkit:ContextMenu>
+				</toolkit:ContextMenuService.ContextMenu>
+
+				<Image Width="100" Height="200">
+					<Image.Source>
+						<BitmapImage UriSource="{Binding anime.cover_image}" CreateOptions="BackgroundCreation" />
+					</Image.Source>
+				</Image>
+
+				<StackPanel Orientation="Vertical" Margin="10,25,0,0" VerticalAlignment="Top">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="*" />
+							<RowDefinition Height="*" />
+							<RowDefinition Height="*" />
+							<RowDefinition Height="*" />
+							<RowDefinition Height="*" />
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding anime.title}" Margin="0,0,0,0" Width="600" FontSize="26" Foreground="{StaticResource TitleBrush}"/> <!-- Width 300 -->
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding anime.alternate_title}" Margin="0,-5,0,0" Width="600" FontSize="26"/> <!-- Width 300 -->
+
+						<TextBlock Grid.Row="2" Grid.Column="0"  Margin="0,7,0,0" Width="auto" FontSize="24" FontFamily="Portable User Interface" >
+													<Run Text="watched: " />
+													<Run Text="{Binding episodes_watched}" />
+													<Run Text="/" />
+													<Run Text="{Binding anime.episode_count}" />
+						</TextBlock>
+                        <TextBlock Grid.Row="3" Grid.Column="0"  Margin="0,-2,0,0" Width="auto" FontSize="24">
+													<Run Text="rewatched: " />
+													<Run Text="{Binding rewatched_times}" />
+						</TextBlock>
+						<!--                                                 -130,2,0,0-->
+                        <toolkit:Rating Grid.Row="3" Grid.Column="1" Margin="-720,2,0,0" Width="133.75" Height="26.75" RatingItemCount="5" Value="{Binding rating.valueAsDouble}" ShowSelectionHelper="False" ReadOnly="True" Background="{StaticResource TransparentBrush}" FilledItemStyle="{StaticResource AnitroColouredStars}" />
+
+					</Grid>
+				</StackPanel>
+			</StackPanel>
+		</DataTemplate>
+	</phone:PhoneApplicationPage.Resources>
+
+	<!-- Toolkit Turnstyle Transitions-->
+	<toolkit:TransitionService.NavigationInTransition>
+		<toolkit:NavigationInTransition>
+			<toolkit:NavigationInTransition.Backward>
+				<toolkit:TurnstileTransition Mode="BackwardIn"/>
+			</toolkit:NavigationInTransition.Backward>
+			<toolkit:NavigationInTransition.Forward>
+				<toolkit:TurnstileTransition Mode="ForwardIn"/>
+			</toolkit:NavigationInTransition.Forward>
+		</toolkit:NavigationInTransition>
+	</toolkit:TransitionService.NavigationInTransition>
+	<toolkit:TransitionService.NavigationOutTransition>
+		<toolkit:NavigationOutTransition>
+			<toolkit:NavigationOutTransition.Backward>
+				<toolkit:TurnstileTransition Mode="BackwardOut"/>
+			</toolkit:NavigationOutTransition.Backward>
+			<toolkit:NavigationOutTransition.Forward>
+				<toolkit:TurnstileTransition Mode="ForwardOut"/>
+			</toolkit:NavigationOutTransition.Forward>
+		</toolkit:NavigationOutTransition>
+	</toolkit:TransitionService.NavigationOutTransition>
+
+	<!-- ============================================================================================ -->
+	<!-- ============================================================================================ -->
+	<!-- Application Code Start -->
+	<!-- ============================================================================================ -->
+	<!-- ============================================================================================ -->
+
+	<!-- ============================================================================================ -->
+	<!-- ============================================================================================ -->
+	<!-- AppBar -->
+	<phone:PhoneApplicationPage.ApplicationBar>
+		<shell:ApplicationBar x:Name="mainAppBar" Mode="Default" Opacity="1.0" IsMenuEnabled="True" IsVisible="True">
+
+			<shell:ApplicationBar.MenuItems>
+				<shell:ApplicationBarMenuItem Click="AppBar_Settings_Click" Text="settings" />
+                <shell:ApplicationBarMenuItem Click="AppBar_About_Click" Text="about" />
+            </shell:ApplicationBar.MenuItems>
+
+			<shell:ApplicationBarIconButton Click="AppBar_Search_Click" IconUri="/Assets/AppBar/search.png" Text="search" />
+			<shell:ApplicationBarIconButton Click="AppBar_Refresh_Click" IconUri="/Assets/AppBar/refresh.png" Text="refresh all" />
+
+
+		</shell:ApplicationBar>
+	</phone:PhoneApplicationPage.ApplicationBar>
+	<!-- ============================================================================================ -->
+	<!-- ============================================================================================ -->
+
+	<!--LayoutRoot is the root grid where all page content is placed-->
+	<Grid x:Name="LayoutRoot" Background="Transparent">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" />
+		</Grid.ColumnDefinitions>
+
+		<!--<Image Source="/Assets/AlignmentGrid.png" VerticalAlignment="Top" Height="Auto" Width="Auto" Margin="0,-32,0,0" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" IsHitTestVisible="False" />-->
+        <!--<Image Source="/SplashScreenImage.jpg" Opacity="0.5" VerticalAlignment="Top" Height="Auto" Width="Auto" Margin="0,-32,0,0" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2" IsHitTestVisible="False" />-->
+        <!--<Rectangle Grid.ColumnSpan="2" Grid.RowSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="1" Fill="{StaticResource BackgroundBrush}"/>-->
+
+        <!-- ============================================================================================ -->
+		<!-- ============================================================================================ -->
+		<!-- ============================================================================================ -->
+		<!-- ============================================================================================ -->
+
+		<!-- Borderless Button
+		<Button x:Name="loginName" Content="login" BorderThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="0.265" Width="114.624" FontSize="36" Padding="-10,-32,-10,-20" RenderTransformOrigin="0.5,0.5" UseLayoutRounding="False" Grid.Row="1" Margin="10,25,0,0"/>
+		-->
+        
+        <!-- ============================================================================================ -->
+		<!-- ============================================================================================ -->
+		<!-- ============================================================================================ -->
+		<!-- ============================================================================================ -->
+		<!--TitlePanel contains the name of the application and page title-->
+		<StackPanel x:Name="TitlePanel" Grid.Row="0" Orientation="Horizontal" Margin="12,17,0,28">
+            <Rectangle Width="32" Height="32" Grid.Column="0" Margin="12,-2,0,0" Fill="{StaticResource PhoneAccentBrush}">
+                <Rectangle.OpacityMask>
+                    <ImageBrush ImageSource="../Assets/Tiles/FlipCycleTileSmall.png"/>
+                </Rectangle.OpacityMask>
+            </Rectangle>
+            <!--<Image Source="Assets/Tiles/FlipCycleTileSmall.png" Width="32" Height="32" Grid.Column="0" Margin="12,-2,0,0"/>-->
+            <TextBlock Text="Anitro" Grid.Column="0" Style="{StaticResource PhoneTextNormalStyle}" Margin="5,1,0,0"/>
+			<ProgressBar x:Name="ApplicationProgressBar" Grid.Column="1" HorizontalAlignment="Left" Height="27" Margin="15,2,0,0" VerticalAlignment="Top" Width="304" IsIndeterminate="True" Foreground="White" IsEnabled="False" Visibility="Collapsed"/>
+		</StackPanel>
+
+
+		<!-- Login Layout Code -->
+		<Grid x:Name="LoginLayout" HorizontalAlignment="Left" Height="528" Margin="12,10,0,0" Grid.Row="1" VerticalAlignment="Top" Width="458" Visibility="Collapsed">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions>
+			
+			<TextBlock Text="login" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Margin="0,-25,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+
+			<Grid Height="Auto" Width="Auto" HorizontalAlignment="Stretch" Margin="0,-10,0,0" Grid.Row="1">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="0.3*" />
+					<RowDefinition Height="1.1*" />
+					<RowDefinition Height="0.6*" />
+					<RowDefinition Height="0.5*" />
+					<RowDefinition Height="*" />
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="5*"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
+				
+				<TextBlock x:Name="loginErrors" Grid.Column="1" Grid.Row="0" Text="Please Log in" HorizontalAlignment="Center" Margin="0,0,0,0" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="Auto"/>
+
+				<toolkit:PhoneTextBox x:Name="UsernameTB" Grid.Column="1" Grid.Row="1" Hint="username" Text="" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,-20,0,50"/>
+				<toolkit:PhoneTextBox x:Name="PasswordTB" Grid.Column="1" Grid.Row="1"  Hint="password" Text="" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,50,0,-20"/>
+
+				<Button x:Name="LoginButton" Grid.Column="1" Grid.Row="2" Content="login" HorizontalAlignment="Center" Margin="0,0,0,0" VerticalAlignment="Top" Width="208" Click="LoginButton_Click"/>
+			
+				<HyperlinkButton Grid.Column="1" Grid.Row="3" Content="Need an account?"
+					TargetName="_self"
+					HorizontalAlignment="Center"
+					HorizontalContentAlignment="Left"
+					VerticalAlignment="Top"
+					NavigateUri="http://hummingbird.me/users/sign_up" Margin="0,0,0,0"/>
+			</Grid>
+		</Grid>
+		<!-- Main Layout -->
+		
+		<Grid x:Name="ContentPanel" Grid.Row="1">
+			<phone:Panorama x:Name="mainPanorama" HorizontalAlignment="Left" Title="" Width="Auto" Margin="0,-93,0,0">
+
+				<phone:PanoramaItem x:Name="userItem" CacheMode="{x:Null}" Header="" Margin="0,80,0,70" Height="Auto"> <!--Old Values: Height 563  Margin 0,0,0,0-->
+                        <phone:PanoramaItem.RenderTransform>
+						<TranslateTransform/>
+					</phone:PanoramaItem.RenderTransform>
+					<Grid Margin="0,-28,0,-77">
+                        <toolkit:PhoneTextBox x:Name="updateStatusTextBox" Hint="write something..." InputScope="Text" Text="" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0,0,0,-20" KeyDown="statusPostEnterCheck" />
+
+                        <ListBox x:Name="listBox_ActivityFeed" ItemTemplate="{StaticResource ActivityFeedTemplate}" Margin="0,70,0,0" FontSize="26" Tap="user_activityFeed_Tap" />
+					</Grid>
+				</phone:PanoramaItem>
+				<phone:PanoramaItem x:Name="libraryItem_CurrentlyWatching" CacheMode="{x:Null}" Header="watching" Margin="0,80,0,70" Height="Auto">
+					<phone:PanoramaItem.RenderTransform>
+						<TranslateTransform/>
+					</phone:PanoramaItem.RenderTransform>
+
+					<Grid Margin="0,-28,0,-77">
+						<ListBox x:Name="listBox_CurrentlyWatching" ItemTemplate="{StaticResource libraryTemplate}" FontSize="26" Tap="library_listBox_Tap" /> <!--listBox_CurrentlyWatching_Tap -->
+					</Grid>
+				</phone:PanoramaItem>
+				<phone:PanoramaItem x:Name="libraryItem_PlanToWatch" CacheMode="{x:Null}" Header="plan to watch" Margin="0,80,0,70" Height="Auto"> <!-- No Margin -->
+					<phone:PanoramaItem.RenderTransform>
+						<TranslateTransform/>
+					</phone:PanoramaItem.RenderTransform>
+					<Grid Margin="0,-28,0,-77">
+						<ListBox x:Name="listBox_PlanToWatch" ItemTemplate="{StaticResource libraryTemplate}" FontSize="26" Tap="library_listBox_Tap" /> <!--listBox_CurrentlyWatching_Tap -->
+					</Grid>
+				</phone:PanoramaItem>
+				<phone:PanoramaItem x:Name="libraryItem_Completed" CacheMode="{x:Null}" Header="completed" Margin="0,80,0,70" Height="Auto"> <!-- No Margin -->
+					<phone:PanoramaItem.RenderTransform>
+						<TranslateTransform/>
+					</phone:PanoramaItem.RenderTransform>
+					<Grid Margin="0,-28,0,-77">
+						<ListBox x:Name="listBox_Completed" ItemTemplate="{StaticResource libraryTemplate}" FontSize="26" Tap="library_listBox_Tap" /> <!--listBox_CurrentlyWatching_Tap -->
+					</Grid>
+				</phone:PanoramaItem>
+				<phone:PanoramaItem x:Name="libraryItem_OnHold" CacheMode="{x:Null}" Header="on hold" Margin="0,80,0,70" Height="Auto"> <!-- No Margin -->
+					<phone:PanoramaItem.RenderTransform>
+						<TranslateTransform/>
+					</phone:PanoramaItem.RenderTransform>
+					<Grid Margin="0,-28,0,-77">
+						<ListBox x:Name="listBox_OnHold" ItemTemplate="{StaticResource libraryTemplate}" FontSize="26" Tap="library_listBox_Tap" /> <!--listBox_CurrentlyWatching_Tap -->
+					</Grid>
+				</phone:PanoramaItem>
+				<phone:PanoramaItem x:Name="libraryItem_Dropped" CacheMode="{x:Null}" Header="dropped" Margin="0,80,0,70" Height="Auto"> <!-- No Margin -->
+					<phone:PanoramaItem.RenderTransform>
+						<TranslateTransform/>
+					</phone:PanoramaItem.RenderTransform>
+					<Grid Margin="0,-28,0,-77">
+						<ListBox x:Name="listBox_Dropped" ItemTemplate="{StaticResource libraryTemplate}" FontSize="26" Tap="library_listBox_Tap" /> <!--listBox_CurrentlyWatching_Tap -->
+					</Grid>
+				</phone:PanoramaItem>
+				<phone:PanoramaItem x:Name="favoritesItem" CacheMode="{x:Null}" Header="favorites" Margin="0,80,0,70" Height="Auto"> <!-- No Margin -->
+					<phone:PanoramaItem.RenderTransform>
+						<TranslateTransform/>
+					</phone:PanoramaItem.RenderTransform>
+					<Grid Margin="0,-28,0,-77">
+						<ListBox x:Name="listBox_Favourites" ItemTemplate="{StaticResource favouritesTemplate}" FontSize="26" Tap="library_listBox_Tap" /> <!--listBox_CurrentlyWatching_Tap -->
+					</Grid>
+				</phone:PanoramaItem>
+				
+			</phone:Panorama>
+		</Grid>
+	</Grid>
+
+</phone:PhoneApplicationPage>

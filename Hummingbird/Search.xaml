@@ -1,0 +1,149 @@
+﻿<phone:PhoneApplicationPage
+	x:Class="Hummingbird.Search"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+	xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:toolkitPrimitives="clr-namespace:Microsoft.Phone.Controls.Primitives;assembly=Microsoft.Phone.Controls.Toolkit"
+	xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:sys="clr-namespace:System;assembly=mscorlib"
+	FontFamily="{StaticResource PhoneFontFamilyNormal}"
+	FontSize="{StaticResource PhoneFontSizeNormal}"
+	Foreground="{StaticResource PhoneForegroundBrush}"
+	SupportedOrientations="PortraitOrLandscape" Orientation="Portrait"
+	mc:Ignorable="d"
+    shell:SystemTray.IsVisible="True"
+    toolkit:TiltEffect.IsTiltEnabled="True">
+    <!--shell:SystemTray.BackgroundColor="{StaticResource SystemTrayBackgroundColor}"-->
+
+	<!-- Toolkit Turnstyle Transitions-->
+	<toolkit:TransitionService.NavigationInTransition>
+		<toolkit:NavigationInTransition>
+			<toolkit:NavigationInTransition.Backward>
+				<toolkit:TurnstileTransition Mode="BackwardIn"/>
+			</toolkit:NavigationInTransition.Backward>
+			<toolkit:NavigationInTransition.Forward>
+				<toolkit:TurnstileTransition Mode="ForwardIn"/>
+			</toolkit:NavigationInTransition.Forward>
+		</toolkit:NavigationInTransition>
+	</toolkit:TransitionService.NavigationInTransition>
+	<toolkit:TransitionService.NavigationOutTransition>
+		<toolkit:NavigationOutTransition>
+			<toolkit:NavigationOutTransition.Backward>
+				<toolkit:TurnstileTransition Mode="BackwardOut"/>
+			</toolkit:NavigationOutTransition.Backward>
+			<toolkit:NavigationOutTransition.Forward>
+				<toolkit:TurnstileTransition Mode="ForwardOut"/>
+			</toolkit:NavigationOutTransition.Forward>
+		</toolkit:NavigationOutTransition>
+	</toolkit:TransitionService.NavigationOutTransition>
+
+
+	<phone:PhoneApplicationPage.Resources>
+        <DataTemplate x:Key="searchTemplatePortrait" x:Name="searchTemplatePortrait">
+            <StackPanel Orientation="Horizontal" Margin="0,-25,0,-20" VerticalAlignment="Top">
+                <toolkit:ContextMenuService.ContextMenu>
+                    <toolkit:ContextMenu>
+                        <toolkit:MenuItem Header="add to favorites" Click="AddToFavourites_Click"/>
+                        <toolkit:MenuItem Header="pin to start" Click="PinToStart_Click"/>
+                        <!-- Click=""-->
+                    </toolkit:ContextMenu>
+                </toolkit:ContextMenuService.ContextMenu>
+
+                <Image Width="100" Height="200">
+                    <Image.Source>
+                        <BitmapImage UriSource="{Binding cover_image}" CreateOptions="BackgroundCreation" />
+                    </Image.Source>
+                </Image>
+
+                <StackPanel Orientation="Vertical" Margin="10,25,0,0">
+                    <TextBlock Text="{Binding title}" Margin="0,0,0,0" Width="400" FontSize="26" Foreground="{StaticResource TitleBrush}"/>
+                    <TextBlock x:Name="searchSynopsisTextBlock" Text="{Binding synopsis}" Margin="-10,0,10,0" Width="350" Height="110" TextWrapping="Wrap" FontSize="20"/>
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="searchTemplateLandscape" x:Name="searchTemplateLandscape">
+			<StackPanel Orientation="Horizontal" Margin="0,-25,0,-20" VerticalAlignment="Top">
+				<toolkit:ContextMenuService.ContextMenu>
+					<toolkit:ContextMenu>
+						<toolkit:MenuItem Header="add to favorites" Click="AddToFavourites_Click"/>
+						<toolkit:MenuItem Header="pin to start" Click="PinToStart_Click"/>
+						<!-- Click=""-->
+					</toolkit:ContextMenu>
+				</toolkit:ContextMenuService.ContextMenu>
+
+				<Image Width="100" Height="200">
+					<Image.Source>
+						<BitmapImage UriSource="{Binding cover_image}" CreateOptions="BackgroundCreation" />
+					</Image.Source>
+				</Image>
+
+				<StackPanel Orientation="Vertical" Margin="10,25,0,0">
+                    <TextBlock Text="{Binding title}" Margin="0,0,0,0" Width="600" FontSize="26" Foreground="{StaticResource TitleBrush}"/>
+                    <TextBlock x:Name="searchSynopsisTextBlock" Text="{Binding synopsis}" Margin="-100,0,0,0" Width="480" Height="110" TextWrapping="Wrap" FontSize="20"/>
+                </StackPanel>
+			</StackPanel>
+		</DataTemplate>  
+	</phone:PhoneApplicationPage.Resources>
+
+	
+	<!-- ============================================================================================ -->
+	<!-- ============================================================================================ -->
+	<!-- AppBar -->
+	<phone:PhoneApplicationPage.ApplicationBar>
+		<shell:ApplicationBar x:Name="mainAppBar" Mode="Minimized" Opacity="1.0" IsMenuEnabled="True" IsVisible="True">
+
+			<shell:ApplicationBar.MenuItems>
+				<shell:ApplicationBarMenuItem Click="AppBar_Settings_Click" Text="settings" />
+                <shell:ApplicationBarMenuItem Click="AppBar_About_Click" Text="about" />
+            </shell:ApplicationBar.MenuItems>
+
+		</shell:ApplicationBar>
+	</phone:PhoneApplicationPage.ApplicationBar>
+	<!-- ============================================================================================ -->
+	<!-- ============================================================================================ -->
+
+
+	<!--LayoutRoot is the root grid where all page content is placed-->
+	<Grid x:Name="LayoutRoot" Background="Transparent">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!--<Rectangle Grid.ColumnSpan="2" Grid.RowSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="1" Fill="{StaticResource BackgroundBrush}"/>-->
+       
+        <!--TitlePanel contains the name of the application and page title-->
+		<StackPanel Grid.Row="0" Margin="12,17,0,28" Orientation="Vertical">
+            <StackPanel Orientation="Horizontal">
+                <Rectangle Width="32" Height="32" Grid.Column="0" Margin="12,-2,0,0" Fill="{StaticResource PhoneAccentBrush}">
+                    <Rectangle.OpacityMask>
+                        <ImageBrush ImageSource="../Assets/Tiles/FlipCycleTileSmall.png"/>
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+                <!--<Image Source="Assets/Tiles/FlipCycleTileSmall.png" Width="32" Height="32" Grid.Column="0" Margin="12,-2,0,0"/>-->
+                <TextBlock Text="Anitro" Grid.Column="0" Style="{StaticResource PhoneTextNormalStyle}" Margin="5,1,0,0"/>
+                <ProgressBar x:Name="ApplicationProgressBar" Grid.Column="1" HorizontalAlignment="Left" Height="27" Margin="15,2,0,0" VerticalAlignment="Top" Width="304" IsIndeterminate="True" Foreground="White" IsEnabled="False" Visibility="Collapsed"/>
+            </StackPanel>
+            <TextBlock Text="search" Margin="9,-10,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+        </StackPanel>
+            
+		<!--ContentPanel - place additional content here-->
+		<Grid x:Name="ContentPanel" Grid.Row="1" Margin="0,-30,0,0">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="80"/>
+				<RowDefinition Height="*" />
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
+			
+			<toolkit:PhoneTextBox x:Name="searchBox" Grid.Row="0" Hint="search" KeyDown="searchBoxEnterEvent" Text="" Margin="12,0,12,0"/>
+            <ListBox x:Name="listBox_Search" Grid.Row="1" ItemTemplate="{StaticResource searchTemplatePortrait}" Height="Auto" Margin="0,-5,0,0" FontSize="26" Tap="listBox_Tap" />
+		</Grid>
+	</Grid>
+
+</phone:PhoneApplicationPage>

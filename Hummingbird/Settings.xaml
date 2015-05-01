@@ -1,0 +1,147 @@
+﻿<phone:PhoneApplicationPage
+    x:Class="Hummingbird.Settings"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="PortraitOrLandscape" Orientation="Portrait"
+    mc:Ignorable="d"
+    shell:SystemTray.IsVisible="True"
+    toolkit:TiltEffect.IsTiltEnabled="True">
+    <!--shell:SystemTray.BackgroundColor="{StaticResource SystemTrayBackgroundColor}"-->
+
+
+    <!-- Toolkit Turnstyle Transitions-->
+    <toolkit:TransitionService.NavigationInTransition>
+        <toolkit:NavigationInTransition>
+            <toolkit:NavigationInTransition.Backward>
+                <toolkit:TurnstileTransition Mode="BackwardIn"/>
+            </toolkit:NavigationInTransition.Backward>
+            <toolkit:NavigationInTransition.Forward>
+                <toolkit:TurnstileTransition Mode="ForwardIn"/>
+            </toolkit:NavigationInTransition.Forward>
+        </toolkit:NavigationInTransition>
+    </toolkit:TransitionService.NavigationInTransition>
+    <toolkit:TransitionService.NavigationOutTransition>
+        <toolkit:NavigationOutTransition>
+            <toolkit:NavigationOutTransition.Backward>
+                <toolkit:TurnstileTransition Mode="BackwardOut"/>
+            </toolkit:NavigationOutTransition.Backward>
+            <toolkit:NavigationOutTransition.Forward>
+                <toolkit:TurnstileTransition Mode="ForwardOut"/>
+            </toolkit:NavigationOutTransition.Forward>
+        </toolkit:NavigationOutTransition>
+    </toolkit:TransitionService.NavigationOutTransition>
+
+
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid x:Name="LayoutRoot" Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--<Rectangle Grid.ColumnSpan="2" Grid.RowSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Opacity="1" Fill="{StaticResource BackgroundBrush}"/>-->
+        
+        <!--TitlePanel contains the name of the application and page title-->
+        <!--<StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
+            <TextBlock Text="Hummingbird" Style="{StaticResource PhoneTextNormalStyle}" Margin="12,0"/>
+        </StackPanel>
+        <ProgressBar x:Name="ApplicationProgressBar" HorizontalAlignment="Left" Height="27" Margin="166,17,0,0" VerticalAlignment="Top" Width="304" IsIndeterminate="True" Foreground="White" IsEnabled="False" Visibility="Collapsed"/>-->
+        <StackPanel x:Name="TitlePanel" Grid.Row="0" Orientation="Horizontal" Margin="12,17,0,28">
+            <Rectangle Width="32" Height="32" Grid.Column="0" Margin="12,-2,0,0" Fill="{StaticResource PhoneAccentBrush}">
+                <Rectangle.OpacityMask>
+                    <ImageBrush ImageSource="../Assets/Tiles/FlipCycleTileSmall.png"/>
+                </Rectangle.OpacityMask>
+            </Rectangle>
+            <!--<Image Source="Assets/Tiles/FlipCycleTileSmall.png" Width="32" Height="32" Grid.Column="0" Margin="12,-2,0,0"/>-->
+            <TextBlock Text="Anitro" Grid.Column="0" Style="{StaticResource PhoneTextNormalStyle}" Margin="5,1,0,0"/>
+            <ProgressBar x:Name="ApplicationProgressBar" Grid.Column="1" HorizontalAlignment="Left" Height="27" Margin="15,2,0,0" VerticalAlignment="Top" Width="304" IsIndeterminate="True" Foreground="White" IsEnabled="False" Visibility="Collapsed"/>
+        </StackPanel>
+
+
+        <!--ContentPanel - place additional content here-->
+
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="0,0,0,0">
+            <!--Margin 12,0,12,0-->
+            <!--<TextBlock Text="settings"  Margin="10,-10,-11,442" Style="{StaticResource PhoneTextTitle1Style}"/>-->
+            <phone:Pivot x:Name="mainPivot" Title="Settings" HorizontalAlignment="Left" Width="480" Margin="0,-27,0,0">
+                <!--<phone:Pivot.TitleTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" FontSize="100" Margin="0,0,0,0" Width="Auto" />
+                    </DataTemplate>
+                </phone:Pivot.TitleTemplate>-->
+
+
+                <phone:PivotItem x:Name="generalPivot" CacheMode="{x:Null}" Header="general" Height="Auto" Margin="12,28,10,0" >
+                    <phone:PivotItem.RenderTransform>
+                        <TranslateTransform/>
+                    </phone:PivotItem.RenderTransform>
+                    <Grid>
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock x:Name="logoutText" HorizontalAlignment="Center" Margin="0,0,0,0" TextWrapping="NoWrap" Text="you are currently signed into" VerticalAlignment="Top" Width="Auto" FontSize="22" Height="Auto"/>
+                            <TextBlock x:Name="logoutUsernameText" HorizontalAlignment="Center" Margin="0,0,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" FontSize="22" Width="Auto" Height="Auto"/>
+
+                            <Button x:Name="logoutButton" Content="logout" HorizontalAlignment="Center" Margin="0,0,4,0" VerticalAlignment="Top" Width="294" Click="logoutButton_Click"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Margin="0,500,0,0"> <!--0,454,0,0-->
+                            <TextBlock x:Name="scheduledTaskRunner" Text="scheduled task last run " Width="Auto" Height="Auto"/>
+                        </StackPanel>
+                    </Grid>
+                </phone:PivotItem>
+                <phone:PivotItem x:Name="lockscreenPivot" CacheMode="{x:Null}" Header="lockscreen" Height="Auto" Margin="12,28,10,0">
+                    <phone:PivotItem.RenderTransform>
+                        <TranslateTransform/>
+                    </phone:PivotItem.RenderTransform>
+                    <Grid>
+                        <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,0,0">
+                            <StackPanel Orientation="Vertical">
+                                <toolkit:ToggleSwitch x:Name="lockscreenSwitch" Header="enable lockscreen wallpapers"   Checked="lockscreenSwitch_Checked" Unchecked="lockscreenSwitch_UnChecked"/>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,-20,0,0">
+                                    <Button x:Name="lockscreenUpdate" Content="update" HorizontalAlignment="Left" Margin="20,0,0,0" VerticalAlignment="Top" Width="auto" Click="lockscreenUpdateButton_Clicked" IsEnabled="{Binding IsChecked, ElementName=lockscreenSwitch}"/>
+                                    <Button x:Name="lockscreenSettingsButton" Content="open lockscreen" HorizontalAlignment="Left" Margin="100,0,0,0" VerticalAlignment="Top" Width="216" Click="lockscreenButton_Clicked"/>
+                                </StackPanel>
+
+                                <toolkit:ToggleSwitch x:Name="randomize_Favourites" Header="favorites" Margin="0,20,0,0" IsChecked="True" Checked="randomize_Favourites_Checked" Unchecked="randomize_Favourites_UnChecked" IsEnabled="{Binding IsChecked, ElementName=lockscreenSwitch}"/>
+                                <toolkit:ToggleSwitch x:Name="randomize_CurrentlyWatching" Header="currently watching" IsChecked="True" Checked="randomize_CurrentlyWatching_Checked" Unchecked="randomize_CurrentlyWatching_UnChecked" IsEnabled="{Binding IsChecked, ElementName=lockscreenSwitch}"/>
+                                <toolkit:ToggleSwitch x:Name="randomize_PlanToWatch" Header="plan to watch" IsChecked="True" Checked="randomize_PlanToWatch_Checked" Unchecked="randomize_PlanToWatch_UnChecked" IsEnabled="{Binding IsChecked, ElementName=lockscreenSwitch}"/>
+                                <toolkit:ToggleSwitch x:Name="randomize_Completed" Header="completed" IsChecked="True" Checked="randomize_Completed_Checked" Unchecked="randomize_Completed_UnChecked" IsEnabled="{Binding IsChecked, ElementName=lockscreenSwitch}"/>
+                                <toolkit:ToggleSwitch x:Name="randomize_OnHold" Header="on hold" IsChecked="True" Checked="randomize_OnHold_Checked" Unchecked="randomize_OnHold_UnChecked" IsEnabled="{Binding IsChecked, ElementName=lockscreenSwitch}"/>
+                                <toolkit:ToggleSwitch x:Name="randomize_Dropped" Header="dropped" IsChecked="True" Checked="randomize_Dropped_Checked" Unchecked="randomize_Dropped_UnChecked" IsEnabled="{Binding IsChecked, ElementName=lockscreenSwitch}"/>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Grid>
+                </phone:PivotItem>
+
+            </phone:Pivot>
+
+
+
+        </Grid>
+    </Grid>
+
+    <!-- ============================================================================================ -->
+    <!-- ============================================================================================ -->
+    <!-- AppBar -->
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar x:Name="mainAppBar" Mode="Default" Opacity="1.0" IsMenuEnabled="True" IsVisible="False">
+
+            <shell:ApplicationBarIconButton Click="AppBar_Search_Click" IconUri="/Assets/AppBar/search.png" Text="search" />
+
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem Click="AppBar_About_Click" Text="about" />
+            </shell:ApplicationBar.MenuItems>
+
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
+    <!-- ============================================================================================ -->
+    <!-- ============================================================================================ -->
+
+</phone:PhoneApplicationPage>

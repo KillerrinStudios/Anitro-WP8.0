@@ -1,0 +1,47 @@
+﻿<Application
+    x:Class="Hummingbird.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone">
+    
+
+    <!--Application Resources-->
+    <Application.Resources>
+        <local:LocalizedStrings xmlns:local="clr-namespace:Hummingbird" x:Key="LocalizedStrings"/>
+        
+        <!--<Color x:Key="SystemTrayColorX" R="0" G="0" B="0" A="1" />-->
+        <Color x:Key="SystemTrayBackgroundColor">Transparent</Color>
+        <Color x:Key="SystemTrayForegroundColor">#FFF0F0F0"</Color>
+        
+        <Color x:Key="HummingbirdOrange">#FFFD7532</Color>
+        <Color x:Key="HummingbirdWhite">#FFF0F0F0</Color>
+        <Color x:Key="HummingbirdGray">#FF525A65</Color>
+        <Color x:Key="HummingbirdDarkGray">#FF272B30</Color>
+        
+        <LinearGradientBrush x:Key="BackgroundBrush" EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="{StaticResource HummingbirdWhite}" Offset="0.0"/>
+            <GradientStop Color="{StaticResource HummingbirdGray}" Offset="1.0"/>
+        </LinearGradientBrush>
+        
+        <SolidColorBrush x:Key="TitleBrush" Color="{StaticResource HummingbirdOrange}"/>
+        <SolidColorBrush x:Key="AlternateTitleBrush" Color="{StaticResource HummingbirdWhite}"/>
+        <SolidColorBrush x:Key="ContentBrush" Color="{StaticResource HummingbirdWhite}"/>
+        <SolidColorBrush x:Key="StarBrush" Color="{StaticResource HummingbirdOrange}"/>
+
+        <Style TargetType="toolkit:RatingItem" x:Key="AnitroColouredStars">
+            <Setter Property="Background" Value="{StaticResource StarBrush}" />
+        </Style>
+
+
+    </Application.Resources>
+
+    <Application.ApplicationLifetimeObjects>
+        <!--Required object that handles lifetime events for the application-->
+        <shell:PhoneApplicationService
+            Launching="Application_Launching" Closing="Application_Closing"
+            Activated="Application_Activated" Deactivated="Application_Deactivated"/>
+    </Application.ApplicationLifetimeObjects>
+
+</Application>
